@@ -71,7 +71,7 @@ contains_space=" ";
                 echo -e "\t\t($ft)" >> "$f";
                 man -f "$pkgb" 2>/dev/null >> "$f";
                 #must combine both -f + fullpath AND -f + basename, otherwise some processes not able to pgrep
-                { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | uniq | sort -n | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
+                { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | sort -n | uniq | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
                 if [ "$total" == "$gn" ]; then
                     echo -en '\n\n\t\t\t\t' >> "$f";
                     dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$pkgp" >>"$f";
@@ -97,7 +97,7 @@ contains_space=" ";
             fi;
             echo -e "\t\t($ft)" >> "$f";
             man -f "$pkgb" 2>/dev/null >> "$f";
-            { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | uniq | sort -n | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
+            { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | sort -n | uniq | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
             if [ "$total" == "$gn" ]; then
                 echo -en '\n\n\t\t\t\t' >> "$f";
                 dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$pkgn" >>"$f";
