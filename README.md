@@ -9,7 +9,7 @@ You should run it as root in bash, i.e. sudo. Support only for dpkg-based system
 
 Note that "No such file or directory" for a lot of processes is normal because those are kernel threads.  
 
-Also my script don't have to worry about bash dependency which causes exe produses shell path instead of executing fd path, since I noticed there are no single system process except custom process running depends on parent bash. And I also noticed all of this is ELF only.  
+Also my script don't have to worry about bash dependency which causes exe produces shell path instead of executing fd path, since I noticed there are no single system process except custom process running depends on parent bash. And I also noticed all of this is ELF only.  
 
 ## Demonstration video (Click image to play at YouTube): ##
 
