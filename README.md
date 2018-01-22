@@ -1,7 +1,9 @@
 # ps_brief
 Understand all running non-kernel processes with manual and package brief.  
 
-This script dump all running processes with dpkg description, process name, process id, filetype, manual brief, then saved into a single file.  
+This script dump all running processes with dpkg description, process name, process id, filetype, manual brief, then saved into a single file. 
+
+Processes in the same package will group together.   
 
 You should run it as root in bash, i.e. sudo. Support only for dpkg-based systems.  
 
