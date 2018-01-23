@@ -67,7 +67,7 @@ contains_space=" ";
             pkgn="$(echo ${pkgn%,})"; #trim trailing ,
             pkgb="$(basename $pkgbp)"
             if [ "$pkgp" == "$pkgn" ]; then
-                echo -en "\n--- $pkgb" >> "$f";
+                echo -en "\n--- $pkgbp" >> "$f";
                 ft="$(file -n -b -e elf $pkgbp)";
                 if [ "${ft#a }" != "${ft}" ]; then #some files return something like 'a /usr/bin/python script', nid split by ',' for this case.
                     ft="$(echo "$ft" | cut -d',' -f1)"
@@ -95,7 +95,7 @@ contains_space=" ";
             echo -n "[$n] " >> "$f";
             echo "$pkgn" >> "$f";
             man -f "$pkgn" 2>/dev/null >> "$f";
-            echo -en "\n--- $pkgb" >> "$f";
+            echo -en "\n--- $pkgbp" >> "$f";
             ft="$(file -n -b -e elf $pkgbp)";
             if [ "${ft#a }" != "${ft}" ]; then
                 ft="$(echo "$ft" | cut -d',' -f1)"

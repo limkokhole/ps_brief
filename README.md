@@ -16,7 +16,7 @@ Also my script don't have to worry about bash dependency which causes exe produc
 [1] package name  
 package manual(if exist)  
   
---- process name  (file type)  
+--- process executable  (file type)  
 process manual 1(section) - manual brief  
 process manual 2/3/...(section) - manual brief (if exist)  
 prcoess id AND process full command  
