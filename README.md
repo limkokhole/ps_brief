@@ -11,26 +11,27 @@ Note that "No such file or directory" for a lot of processes is normal because t
 
 Also my script don't have to worry about bash dependency which causes exe produces shell path instead of executing fd path, since I noticed there are no single system process except custom process running depends on parent bash. And I also noticed all of this is ELF only.
 
-Format:
-[1] package name
-package manual(if exist)
+## Format: ##
 
---- process name  (file type)
-process manual 1(section) - manual brief
-process manual 2/3/...(section) - manual brief (if exist)
-prcoess id AND process full command
-
---- prcoess name 2 (file type) (if exist)
-...cont.
-
-package description
-
-package link (if exist)
-package contact
-
-[2] package name 2
-...cont.
-
+[1] package name  
+package manual(if exist)  
+  
+--- process name  (file type)  
+process manual 1(section) - manual brief  
+process manual 2/3/...(section) - manual brief (if exist)  
+prcoess id AND process full command  
+  
+--- prcoess name 2 (file type) (if exist)  
+...cont.  
+  
+package description  
+  
+package link (if exist)  
+package contact  
+  
+[2] package name 2  
+...cont.  
+  
 
 ## Demonstration video (Click image to play at YouTube): ##
 
