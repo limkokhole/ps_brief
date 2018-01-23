@@ -19,7 +19,16 @@ arri=();
 #readlink nid -v to report permission denied OR No such file or directory
 
 #can't use this since "pgrep -f command" is merely search and no guarantee produced 100% match #total=0; ti=0; while IFS='' read -r fn; do fn="$(dpkg -S "$fn" 2>> "$skip_f")"; ((ti++)); echo "[$ti] Checking... $fn"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"); ((total++)); done < <(readlink -v -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
-total=0; ti=0; while IFS='' read -r pid; do ((ti++)); echo "[$ti] Checking pid $pid ..."; fn="$(readlink -v -f "/proc/$pid/exe" 2>>"$skip_f")"; if [ -z "$fn" ]; then continue; fi; fn="$(dpkg -S "$fn" 2>> "$skip_f")"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"':'"$pid"); ((total++));  done < <(find /proc/ -maxdepth 1 -type d -iregex '/proc/[0-9]+$' -exec basename {} \; | sort -zn ); echo "${pid[1]}"; echo "${pidArr[1]}"
+total=0; ti=0; while IFS='' read -r pid; do
+    ((ti++));
+    echo "[$ti] Checking pid $pid ...";
+    fn="$(readlink -v -f "/proc/$pid/exe" 2>>"$skip_f")";
+    if [ -z "$fn" ]; then continue; fi;
+    fn="$(dpkg -S "$fn" 2>> "$skip_f")";
+    if [ -z "$fn" ]; then continue; fi;
+    arr+=("$fn"':'"$pid");
+    ((total++));
+done < <(find /proc/ -maxdepth 1 -type d -iregex '/proc/[0-9]+$' -exec basename {} \; | sort -zn );
 #arr=( $(printf '%s\n' "${arr[@]}"|sort -n) )
 IFS=$'\n' arr=($(sort -n <<<"${arr[*]}"))
 unset IFS
