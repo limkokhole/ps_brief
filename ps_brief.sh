@@ -4,22 +4,25 @@
 #1st part: For every package name related to the valid process files, the next line will shows its man, if any.
 #2nd part: --- process filename and the next line will shows its man, if any
 #3rd part: The last part will be package's description, home page, and maintainer contact.
-f=~/Downloads/mybin_ps_jan_22_2018;
+f=~/Downloads/myps_jan_22_2018;
 ext='.c'
 now="$(date '+%Y_%m_%d_%H:%M:%S')"
 #keep in mind since sudo and non-sudo may run this, so once you output to root file, you can't output to the same root file as non-root, so I use datetime to make the file unique.
 f="$f"_"$now""$ext"
-skip_f='/tmp/skip_processes_'"$now"'.log'
+skip_f='/tmp/myps_skip_processes_'"$now"'.log'
 if [ -f "$f" ]; then rm "$f"; fi
 if [ -f "$skip_f" ]; then rm "$f"; fi
 echo 'Start calculating total, please to be patient...';
 #total=0; while IFS='' read -r fn; do  fn="$(dpkg -S "$fn" 2>> "$skip_f")"; if [ -z "$fn" ]; then continue; fi; ((total++)); done < <(readlink -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
-arr=()
-arri=()
-#better use pgrep since keep arry with sort+uniq+pid more complicated #while IFS='' read -r r; do readlink -f "/proc/$r/exe" && echo $r; done < <(find /proc/ -maxdepth 1 -type d -iregex '/proc/[0-9]+$' -exec basename {} \;)
+arr=();
+arri=();
 #readlink nid -v to report permission denied OR No such file or directory
-total=0; ti=0; while IFS='' read -r fn; do fn="$(dpkg -S "$fn" 2>> "$skip_f")"; ((ti++)); echo "[$ti] Checking... $fn"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"); ((total++)); done < <(readlink -v -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
-total=${#arr[@]}
+
+#can't use this since "pgrep -f command" is merely search and no guarantee produced 100% match #total=0; ti=0; while IFS='' read -r fn; do fn="$(dpkg -S "$fn" 2>> "$skip_f")"; ((ti++)); echo "[$ti] Checking... $fn"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"); ((total++)); done < <(readlink -v -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
+total=0; ti=0; while IFS='' read -r pid; do ((ti++)); echo "[$ti] Checking pid $pid ..."; fn="$(readlink -v -f "/proc/$pid/exe" 2>>"$skip_f")"; if [ -z "$fn" ]; then continue; fi; fn="$(dpkg -S "$fn" 2>> "$skip_f")"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"':'"$pid"); ((total++));  done < <(find /proc/ -maxdepth 1 -type d -iregex '/proc/[0-9]+$' -exec basename {} \; | sort -zn ); echo "${pid[1]}"; echo "${pidArr[1]}"
+#arr=( $(printf '%s\n' "${arr[@]}"|sort -n) )
+IFS=$'\n' arr=($(sort -n <<<"${arr[*]}"))
+unset IFS
 fn='';
 pkgn='';
 n=0;
@@ -42,7 +45,10 @@ contains_space=" ";
 #readlink -f /proc/*/exe 2>/dev/null | sort | uniq | 
 	#while IFS='' read -r fn; do
     for i in ${!arr[@]}; do
-        fn="${arr[i]}";
+        arrItem="${arr[i]}";
+        fn="$( echo -n "$arrItem" | awk -F: 'sub(FS $NF,x)' )"
+        pid="$(echo -n "$arrItem" | awk -F: '{print $NF}' )"
+         
         orig_f="$fn";
         if [ -z "$fn" ]; then continue; fi;
 		((pgn=gn+1));
@@ -71,7 +77,8 @@ contains_space=" ";
                 echo -e "\t\t($ft)" >> "$f";
                 man -f "$pkgb" 2>/dev/null >> "$f";
                 #must combine both -f + fullpath AND -f + basename, otherwise some processes not able to pgrep
-                { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | sort -n | uniq | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
+                #{ pgrep -f "$pkgbp"; pgrep "$pkgb"; } | sort -n | uniq | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
+                echo -n "$pid " >> "$f"; cat "/proc/$pid/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"
                 if [ "$total" == "$gn" ]; then
                     echo -en '\n\n\t\t\t\t' >> "$f";
                     dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$pkgp" >>"$f";
@@ -97,7 +104,7 @@ contains_space=" ";
             fi;
             echo -e "\t\t($ft)" >> "$f";
             man -f "$pkgb" 2>/dev/null >> "$f";
-            { pgrep -f "$pkgbp"; pgrep -f "$pkgb"; } | sort -n | uniq | while IFS='' read -r pi; do echo -n "$pi " >> "$f"; cat "/proc/$pi/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"; done
+            echo -n "$pid " >> "$f"; cat "/proc/$pid/cmdline" | tr '\0' ' ' >> "$f"; echo >> "$f"
             if [ "$total" == "$gn" ]; then
                 echo -en '\n\n\t\t\t\t' >> "$f";
                 dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$pkgn" >>"$f";
