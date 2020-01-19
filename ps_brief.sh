@@ -4,14 +4,14 @@
 #1st part: For every package name related to the valid process files, the next line will shows its man, if any.
 #2nd part: --- process filename and the next line will shows its man, if any
 #3rd part: The last part will be package's description, home page, and maintainer contact.
-f=~/Downloads/myps_jan_22_2018;
+f=~/Downloads/myps_;
 ext='.c'
 now="$(date '+%Y_%m_%d_%H:%M:%S')"
 #keep in mind since sudo and non-sudo may run this, so once you output to root file, you can't output to the same root file as non-root, so I use datetime to make the file unique.
 f="$f"_"$now""$ext"
 skip_f='/tmp/myps_skip_processes_'"$now"'.log'
 if [ -f "$f" ]; then rm "$f"; fi
-if [ -f "$skip_f" ]; then rm "$f"; fi
+if [ -f "$skip_f" ]; then rm "$skip_f"; fi
 echo 'Start calculating total, please to be patient...';
 #total=0; while IFS='' read -r fn; do  fn="$(dpkg -S "$fn" 2>> "$skip_f")"; if [ -z "$fn" ]; then continue; fi; ((total++)); done < <(readlink -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
 arr=();
