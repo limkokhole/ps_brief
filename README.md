@@ -21,7 +21,7 @@ process manual 1(section) - manual brief
 process manual 2/3/...(section) - manual brief (if exist)  
 prcoess id AND process full command  
   
---- prcoess name 2 (file type) (if exist)  
+--- process executable 2 (file type) (if exist)  
 ...cont.  
   
 package description  
