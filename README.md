@@ -1,6 +1,8 @@
 # ps_brief
 
-"Ever felt overwhelmed by the countless processes running on your system? Wondering what those cryptic processes are doing? Fear not—this script is here to save the day!"
+> Ever felt overwhelmed by the countless processes running on your system?  
+> Wondering what those cryptic processes are doing?  
+> Fear not—this script is here to save the day!
 
 Understand all running non-kernel processes with manual and package brief.  
 
