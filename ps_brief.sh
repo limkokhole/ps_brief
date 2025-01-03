@@ -4,7 +4,20 @@
 #1st part: For every package name related to the valid process files, the next line will shows its man, if any.
 #2nd part: --- process filename and the next line will shows its man, if any
 #3rd part: The last part will be package's description, home page, and maintainer contact.
-f=~/Downloads/myps_;
+
+# Get the original user (works for both sudo and su)
+orig_user="$(logname)"
+# BUG FIXED: su no /root/Downloads # Previously(2018) sudo ~ still current user but now seems changed
+# This logname ensure not save in root dir:
+f=/home/"$orig_user"/Downloads;
+
+# Check if the folder exists
+if [ ! -d "$f" ]; then
+    echo "Error: Folder $f does not exist. Aborting."
+    exit 1
+fi
+f="$f/myps";
+
 ext='.c'
 now="$(date '+%Y_%m_%d_%H:%M:%S')"
 #keep in mind since sudo and non-sudo may run this, so once you output to root file, you can't output to the same root file as non-root, so I use datetime to make the file unique.
@@ -20,6 +33,13 @@ arri=();
 
 #can't use this since "pgrep -f command" is merely search and no guarantee produced 100% match #total=0; ti=0; while IFS='' read -r fn; do fn="$(dpkg -S "$fn" 2>> "$skip_f")"; ((ti++)); echo "[$ti] Checking... $fn"; if [ -z "$fn" ]; then continue; fi; arr+=("$fn"); ((total++)); done < <(readlink -v -f /proc/*/exe 2>>"$skip_f" | sort | uniq)
 total=0; ti=0; while IFS='' read -r pid; do
+
+ #   if [ "$pid" -ne 3164 ]; then # Debug purpose
+ #         if [ "$pid" -ne 3169 ]; then # Debug purpose
+ #       	continue
+ #	    fi
+ #   fi
+
     ((ti++));
     echo "[$ti] Checking pid $pid ...";
     fn="$(readlink -v -f "/proc/$pid/exe" 2>>"$skip_f")";
@@ -46,7 +66,6 @@ contains_space=" ";
 #Special case 4: diversion by parallel to: /usr/bin/parallel.moreutils
 #Special case 5: parallel, moreutils: /usr/bin/parallel
 
-
 #while IFS='' read -r f; do echo ----- "$f" -----; dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$(basename "$(dirname "$f")")"; done < <(readlink -f /proc/*/exe)
 
 #find "$d" -maxdepth 1 -name '*parallel*' -type f -exec dpkg -S {} + 2> /dev/null | sort | #if want test custom name #2
@@ -64,7 +83,6 @@ contains_space=" ";
 		echo "[$pgn/$total] Parsing... $fn";
         ((gn++));
         pkgbp="$(echo -n $fn | cut -f2- -d' ' | awk '{$1=$1}1')"; #awk to strip leading path spaces
-        
         if [[ "$(echo $fn | cut -d':' -f1)" =~ $contains_space ]]; then
             echo 'multi-packages not supported.';
         elif [[ "$pkgbp" =~ $contains_space ]]; then
@@ -75,7 +93,8 @@ contains_space=" ";
             pkgn="$(echo ${pkgn%:})"; #trim trailing :
             pkgn="$(echo ${pkgn%,})"; #trim trailing ,
             pkgb="$(basename $pkgbp)"
-            if [ "$pkgp" == "$pkgn" ]; then
+            if [ "$pkgp" == "$pkgn" ]; then # BUG: If there is only one user process, logging will not occur since first $pkgp="pkgn" is empty, although this is unlikely unless hardcode PID to debug
+
                 echo -en "\n--- $pkgbp" >> "$f";
                 ft="$(file -n -b -e elf $pkgbp)";
                 if [ "${ft#a }" != "${ft}" ]; then #some files return something like 'a /usr/bin/python script', nid split by ',' for this case.
@@ -125,6 +144,9 @@ echo "Skipped Log:"
 cat "$skip_f" 2>/dev/null
 if [ ! -f "$f" ]; then
 	echo "Sorry, no file has brief";
-else echo "Done ... Please check your file $f";
+else
+    echo "Done ... Please check your file $f";
+    # Change ownership from root to the original user
+    chown "$orig_user":"$orig_user" "$f"
 fi
 
