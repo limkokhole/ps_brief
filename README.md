@@ -6,7 +6,7 @@
 
 Understand all running non-kernel processes with manual and package brief.  
 
-This script lists all running processes along with their dpkg descriptions, process names, process IDs, file types, and manual summaries, and saves the output into a single file. The output file has a .c extension for improved readability, as it highlights syntax in color.
+This script lists all running processes along with their dpkg descriptions, process names, process IDs, file types, and manual summaries, and saves the output into a single file. The output file has a .c extension for improved readability, as it highlights syntax in color. The output filepath will be shown at the end of the result.
 
 Processes belonging to the same package are grouped together for better organization.
 
