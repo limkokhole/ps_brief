@@ -15,7 +15,9 @@ This script should be run as root in a bash shell and supports only dpkg-based s
 Note: The message "No such file or directory" for many processes is normal, as these refer to kernel threads.
 
 ## How to Run: ##
+```bash
 sudo bash ps_brief.sh
+```
 
 ## Output Format: ##
 
