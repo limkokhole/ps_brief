@@ -1,17 +1,21 @@
 # ps_brief
+
+"Ever felt overwhelmed by the countless processes running on your system? Wondering what those cryptic processes are doing? Fear not—this script is here to save the day!"
+
 Understand all running non-kernel processes with manual and package brief.  
 
-This script dump all running processes with dpkg description, process name, process id, filetype, manual brief, then saved into a single file. 
+This script lists all running processes along with their dpkg descriptions, process names, process IDs, file types, and manual summaries, and saves the output into a single file. The output file has a .c extension for improved readability, as it highlights syntax in color.
 
-Processes in the same package will group together.   
+Processes belonging to the same package are grouped together for better organization.
 
-You should run it as root in bash, i.e. sudo. Support only for dpkg-based systems.  
+This script should be run as root in a bash shell and supports only dpkg-based systems.
 
-Note that "No such file or directory" for a lot of processes is normal because those are kernel threads.  
+Note: The message "No such file or directory" for many processes is normal, as these refer to kernel threads.
 
-Also my script don't have to worry about bash dependency which causes exe produces shell path instead of executing fd path, since I noticed there are no single system process except custom process running depends on parent bash. And I also noticed all of this is ELF only.
+## How to Run: ##
+sudo bash ps_brief.sh
 
-## Format: ##
+## Output Format: ##
 
 [1] package name  
 package manual(if exist)  

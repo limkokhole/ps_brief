@@ -66,6 +66,8 @@ contains_space=" ";
 #Special case 4: diversion by parallel to: /usr/bin/parallel.moreutils
 #Special case 5: parallel, moreutils: /usr/bin/parallel
 
+# Note: Don't have to worry about bash dependency which causes exe produces shell path instead of executing fd path, since I noticed there are no single system process except custom process running depends on parent bash. And I also noticed all of this is ELF only.
+
 #while IFS='' read -r f; do echo ----- "$f" -----; dpkg-query -W -f='${Description}\n\n${Homepage}\nMaintainer: ${Maintainer}\n\n' "$(basename "$(dirname "$f")")"; done < <(readlink -f /proc/*/exe)
 
 #find "$d" -maxdepth 1 -name '*parallel*' -type f -exec dpkg -S {} + 2> /dev/null | sort | #if want test custom name #2
